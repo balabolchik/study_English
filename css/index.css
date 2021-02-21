@@ -1,0 +1,118 @@
+h1 {
+    margin: 0;
+    text-align: center;
+}
+
+p {
+    font-size: 30px;
+    text-align: center;
+}
+
+#root {
+    border: 1px solid black;
+    border-radius: 5px;
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    grid-template-rows: 50px 1fr;
+    min-height: 300px;
+    height: 100%;
+}
+
+.text {
+    margin: 0;
+    text-align: center;
+    grid-column: 1/-1;
+}
+
+button {
+    max-height: 30px;
+    background-color: black;
+    color: white;
+    border-radius: 10px/50%;
+    border: 1px solid transparent;
+    transition: all 0.5s ease;
+    margin: 15px;
+}
+
+button:focus {
+    outline: none;
+}
+
+button:hover {
+    background-color: white;
+    color: black;
+    border-color: black;
+}
+
+.image {
+    display: grid;
+    grid-template-rows: 1fr 50px;
+}
+
+#input {
+    width: 80%;
+    height: 20px; 
+    padding: 15px;
+    margin: 15px;
+    border-radius: 10px;
+}
+
+#input:focus {
+    outline: none;
+}
+
+.good, .great, .bad {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.fa.fa-smile-o, .fa.fa-thumbs-o-down {
+    font-size: 200px;
+}
+
+.fa.fa-thumbs-o-up {
+    color: rgb(44, 157, 53);
+}
+
+.fa.fa-smile-o {
+    color: springgreen;
+}
+
+.fa.fa-thumbs-o-down {
+    color: red;
+}
+
+.bad#input{
+    border: 3px solid red;
+}
+
+.great#input{
+    border: 3px solid springgreen;
+}
+
+.bad {
+    color: red;
+    animation: anim1 1s linear 0s infinite;
+}
+
+@keyframes anim1 {
+    10%,30%,50%,70%,90%{transform: rotate(1deg);}
+    20%,40%,60%,80%{transform: rotate(-1deg);}
+    0%,100%{transform: rotate(0deg);}
+}
+
+.great {
+    animation: anim2 1s linear 0s infinite;
+    
+}
+
+@keyframes anim2 {
+    10%,30%,50%,70%,90%{transform: rotate(5deg);}
+    20%,40%,60%,80%{transform: rotate(-5deg);}
+    0%,100%{transform: rotate(0deg);}
+}
+
+.results {
+    width: 90%;
+}
