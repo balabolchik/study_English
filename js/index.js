@@ -12,7 +12,7 @@ let addScore = () => {
     }
 }
 
-const limitScore = 6;
+const limitScore = 7;
 
 let wordss = {
     numbers: []
