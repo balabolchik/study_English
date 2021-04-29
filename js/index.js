@@ -24,18 +24,19 @@ let words = {
         }
     },
     maxlevel: 0,
+    minScore: 0,
 };
 
 function starter(score) {
     let learnedWordsPercent = 100;
     let i;
-    for (i = Math.min(...score); learnedWordsPercent >= 80 ; i++) {
+    for (i = Math.min(...score); learnedWordsPercent >= 80 ; ++i) {
         learnedWordsPercent = ((score.filter(el => el > i).length / score.length)*100).toFixed(2);
     }
-    filterLearnedWords(i);
+    filterLearnedWords(i - 1, learnedWordsPercent);
 }
 
-function filterLearnedWords(limitScore) {
+function filterLearnedWords(limitScore, learnedWordsPercent) {
     for (let i = 0; i < words.english.length; i++) {
         if (words.score[i] < limitScore) {
             wordss.numbers.push(i);
@@ -43,7 +44,7 @@ function filterLearnedWords(limitScore) {
             counter++;
         }
     }
-    limitScore % 2 ? onUkraine(limitScore) : onEnglish(limitScore);
+    limitScore % 2 ? onUkraine(limitScore, learnedWordsPercent) : onEnglish(limitScore, learnedWordsPercent);
 
 }
 
@@ -67,43 +68,69 @@ const f2 = (limitScore) => {
     <form action="https://formspree.io/f/xvovyoja" method="POST">
     <input class="results" name="Results" value='[${words.score.toString()}]'>
     <input class="results" name="Max Level" value='[${limitScore}]'>
+    <input class="results" name="Min Score" value='[${Math.min(...words.score)}]'>
             <input type="submit">
     </form>
     `
 }
 
 function onUkraine(limitScore) {
+    let id = setTimeout(() => {
+        document.getElementById("root").innerHTML = `
+            <form action="https://formspree.io/f/xvovyoja" method="POST">
+                <input class="results" name="Results" value='[${words.score.toString()}]'>
+                <input class="results" name="Max Level" value='[${limitScore}]'>
+                <input class="results" name="Min Score" value='[${Math.min(...words.score)}]'>
+                <input id="send" type="submit">
+            </form>
+        `;
+        document.getElementById("send").click();
+
+    }, 1800000);
     root.innerHTML = `<div></div>`;
     randomNumber = Math.floor(Math.random() * wordss.numbers.length);
     root.innerHTML = `
     <h1 class="text">${words.ukraine[wordss.numbers[randomNumber]].toUpperCase()}</h1>
     <div class="pressWord">
-        <input id="input" type="text" placeholder="Your word" value="" value="${words.yourTranslate}" autofocus></input>
+        <input id="input" type="text" placeholder="Your word" value="" value="${words.yourTranslate}" autofocus autocomplete="off"/>
         <p>${wordss.numbers.length}</p>
-        <p>Learned ${counter} words</p>
+        <p>Level ${limitScore}: <span>${((words.score.filter(el => el > limitScore).length / words.score.length)*100).toFixed(2)}%</span></p>
     </div>
     <div class="image"></div>
     `
-    document.getElementById("input").addEventListener('keyup', () => { onKeyUp(document.getElementById("input").value, 'english', onUkraine, limitScore) });
+    document.getElementById("input").addEventListener('keyup', () => { onKeyUp(document.getElementById("input").value, 'english', onUkraine, limitScore, id) });
 };
 
 
 function onEnglish(limitScore) {
+    let id = setTimeout(() => {
+        document.getElementById("root").innerHTML = `
+            <form action="https://formspree.io/f/xvovyoja" method="POST">
+                <input class="results" name="Results" value='[${words.score.toString()}]'>
+                <input class="results" name="Max Level" value='[${limitScore}]'>
+                <input class="results" name="Min Score" value='[${Math.min(...words.score)}]'>
+                <input id="send" type="submit">
+            </form>
+        `;
+        document.getElementById("send").click();
+
+    }, 1800000);
     root.innerHTML = `<div></div>`;
     randomNumber = Math.floor(Math.random() * wordss.numbers.length);
     root.innerHTML = `
     <h1 class="text">${words.english[wordss.numbers[randomNumber]].toUpperCase()}</h1>
     <div class="pressWord">
-        <input id="input" type="text" placeholder="Your word" value="" value="${words.yourTranslate}" autofocus></input>
+        <input id="input" type="text" placeholder="Your word" value="" value="${words.yourTranslate}" autofocus autocomplete="off"></input>
         <p>${wordss.numbers.length}</p>
-        <p>Learned ${counter} words</p>
+        <p>Level ${limitScore}: <span>${((words.score.filter(el => el > limitScore).length / words.score.length)*100).toFixed(2)}%</span></p>
     </div>
     <div class="image"></div>
     `
-    document.getElementById("input").addEventListener('keyup', () => { onKeyUp(document.getElementById("input").value, 'ukraine', onEnglish, limitScore) });
+    document.getElementById("input").addEventListener('keyup', () => { onKeyUp(document.getElementById("input").value, 'ukraine', onEnglish, limitScore, id) });
 }
 
-function onKeyUp(e, translateLanguage, func, limitScore) {
+function onKeyUp(e, translateLanguage, func, limitScore, intervalId) {
+    clearInterval(intervalId);
     words.yourTranslate = e;
     if (words.yourTranslate.toUpperCase() == words[translateLanguage][wordss.numbers[randomNumber]].slice(0, e.length).toUpperCase()) {
         if (words.yourTranslate.length !== words[translateLanguage][wordss.numbers[randomNumber]].length) {
@@ -137,7 +164,7 @@ function onKeyUp(e, translateLanguage, func, limitScore) {
                     <button onclick="f2(${limitScore})">Let results</button>
                 `
             } else {
-                setTimeout(func, 1000);
+                setTimeout(() => {func(limitScore)}, 1000);
             }
         }
     } else {
@@ -150,7 +177,7 @@ function onKeyUp(e, translateLanguage, func, limitScore) {
         document.getElementById('input').classList.add('bad');
         document.querySelector(".pressWord").innerHTML += `<p>${words[translateLanguage][wordss.numbers[randomNumber]]}</p>`
         words.score[wordss.numbers[randomNumber]] -= 0.5;
-        setTimeout(func, 2000)
+        setTimeout(() => {func(limitScore)}, 2000)
     }
 }
 

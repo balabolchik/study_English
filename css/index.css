@@ -116,3 +116,10 @@ button:hover {
 .results {
     width: 90%;
 }
+
+span {
+    padding: 10px 20px 5px;
+    font-weight: bolder;
+    border-radius: 10px;
+    border-bottom: 1px solid grey;
+}
